@@ -67,6 +67,27 @@ export const Libros = ({usuario}) => {
     setYear(value)
   }
 
+  const onPrestarLibro = async(UUID) => {
+    const respuestaSwal = await Swal.fire({
+      icon: 'warning',
+      title: '¿Estás seguro que desea reservar este libro?',
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      showCancelButton: true,
+      didRender: () => {
+        const confirmButton = Swal.getConfirmButton();
+        confirmButton.classList.remove('swal2-confirm');
+        const cancelButton = Swal.getCancelButton();
+        cancelButton.classList.remove('swal2-cancel');
+      },
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger'
+      }
+    })
+    console.log(respuestaSwal);
+  }
+
   const onChangePortada = (e) => {
     const file = (e.target.files[0])
     const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg']; 
@@ -199,10 +220,21 @@ export const Libros = ({usuario}) => {
                   <li className="list-group-item"><b>Año: </b>{libro.Año}</li>
                   <li className="list-group-item"><b>Disponible: </b>{(libro.Disponibilidad) ? 'SI' : 'NO'}</li>
                 </ul>
-                <div className="card-body">
-                  <a href="#" className="card-link">Card link</a>
-                  <a href="#" className="card-link">Another link</a>
+                {(libro.Disponibilidad)
+                  ?
+                  <div className="card-body bg-dark prestamo" onClick={(e) => {onPrestarLibro(libro.UUID)}} >
+                  <div className="d-flex col-12 justify-content-center align-items-center text-white">
+                    SOLICITAR PRESTAMO
+                  </div>
                 </div>
+
+                : 
+                <div className="card-body bg-danger">
+                <div className="d-flex col-12 justify-content-center align-items-center text-white">
+                  AGOTADO
+                </div>
+              </div>
+                }
               </div>
             </div>
           )

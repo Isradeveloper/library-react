@@ -26,3 +26,12 @@ nav {
   background-color: #48dcf9;
   cursor: pointer;
 }
+
+.prestamo {
+  transition: all 0.4s;
+}
+
+.prestamo:hover {
+  background-color: #2a95aa !important;
+  cursor: pointer;
+}
