@@ -26,7 +26,7 @@ const crearNuevoUsuario = async (email, password, nombres, apellidos) => {
     // Signed in
     const usuario = credencial.user;
 
-    await database.collection(`usuarios`).add({
+    await database.collection(`usuarios`).doc(usuario.uid).set({
       "Email": usuario.email,
       "UID": usuario.uid,
       "Nombres": nombres,
@@ -98,7 +98,7 @@ const agregarLibro = async (titulo, descripcion, autor, year, portada) => {
     // Obtener el enlace de descarga del archivo cargado
     const url = await snapshot.ref.getDownloadURL();
 
-    await database.collection('libros').add({
+    await database.collection('libros').doc(UUID).set({
       "Titulo": titulo,
       "Descripcion": descripcion,
       "Autor": autor,
@@ -145,4 +145,117 @@ const cargarLibros = async() => {
   }
 }
 
-export {fire, auth, crearNuevoUsuario, loguearUsuario, agregarLibro, cargarLibros}
+const reservarLibro = async(usuarioUID, libroUUID) => {
+  
+  try {
+      const libroRef = database.collection('libros').doc(libroUUID);
+      const libroDoc = await libroRef.get();
+      let libro = libroDoc.data();
+  
+      if (!libro.Disponibilidad) {
+        return {
+          "success": false,
+          "msg": "El libro no está disponible"
+        };
+      }
+  
+      const usuarioRef = database.collection('usuarios').doc(usuarioUID);
+      const usuarioDoc = await usuarioRef.get();
+      let usuario = usuarioDoc.data();
+  
+      await libroRef.update({ "Disponibilidad": false });
+      const libroDoc2 = await libroRef.get();
+      libro = libroDoc2.data();
+
+      await usuarioRef.update({ "LibrosPrestados": [...usuario.LibrosPrestados, libro] });
+    
+      const usuarioDoc2 = await usuarioRef.get();
+      usuario = usuarioDoc2.data();
+
+      return {
+        "success": true,
+        "msg": "Libro prestado correctamente",
+        "usuario": usuario
+      };
+
+
+  } catch (error) {
+    console.error({
+      "errorCode": error.code,
+      "errorMessage": error.message
+    });
+    return {
+      "success": false,
+      "msg": error.message
+    };
+  }
+}
+
+const cargarPrestamos = async(UID) => {
+  try {
+    const query = await database.collection('usuarios').doc(UID).get()
+    const usuario = query.data()
+
+    return usuario.LibrosPrestados
+
+  } catch (error) {
+    console.error({
+      "errorCode": error.code,
+      "errorMessage": error.message
+    });
+    return {
+      "success": false,
+      "msg": error.message,
+    }
+  }
+}
+
+const devolverLibro = async(usuarioUID, libroUUID) => {
+  
+  try {
+      const libroRef = database.collection('libros').doc(libroUUID);
+      const libroDoc = await libroRef.get();
+      let libro = libroDoc.data();
+  
+      if (libro.Disponibilidad) {
+        return {
+          "success": false,
+          "msg": "El libro ya fue devuelto"
+        };
+      }
+  
+      const usuarioRef = database.collection('usuarios').doc(usuarioUID);
+      const usuarioDoc = await usuarioRef.get();
+      let usuario = usuarioDoc.data();
+  
+      await libroRef.update({ "Disponibilidad": true });
+      const libroDoc2 = await libroRef.get();
+      libro = libroDoc2.data();
+
+      const librosEnPrestamo = usuario.LibrosPrestados.filter((libro) => (libro.UUID != libroUUID)) 
+      
+      await usuarioRef.update({ "LibrosPrestados": librosEnPrestamo});
+    
+      const usuarioDoc2 = await usuarioRef.get();
+      usuario = usuarioDoc2.data();
+
+      return {
+        "success": true,
+        "msg": "Libro devuelto correctamente",
+        "usuario": usuario
+      };
+
+
+  } catch (error) {
+    console.error({
+      "errorCode": error.code,
+      "errorMessage": error.message
+    });
+    return {
+      "success": false,
+      "msg": error.message
+    };
+  }
+}
+
+export {fire, auth, crearNuevoUsuario, loguearUsuario, agregarLibro, cargarLibros, reservarLibro, cargarPrestamos, devolverLibro}

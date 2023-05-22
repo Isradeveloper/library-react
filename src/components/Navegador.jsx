@@ -24,8 +24,8 @@ export const Navegador = ({usuario, onLogOut}) => {
         <Navbar.Collapse id="responsive-navbar-nav">
 
           <Nav className="me-auto">
-          {(!usuario) ? '' : <Nav.Link eventKey={1} >Libros disponibles</Nav.Link>}
-          {(!usuario) ? '' : <Nav.Link eventKey={2} >Mis prestamos</Nav.Link>}
+          {(!usuario) ? '' : <Nav.Link eventKey={1} onClick={(e) => {navegar('/libros', false)}}>Libros disponibles</Nav.Link>}
+          {(!usuario) ? '' : <Nav.Link eventKey={2} onClick={(e) => {navegar('/prestamos', false)}}>Mis prestamos</Nav.Link>}
           </Nav>
           
           <Nav>

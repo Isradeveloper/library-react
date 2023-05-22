@@ -117,34 +117,34 @@ export const Register = ({onLogin}) => {
               ? <form className="col-12" onSubmit={onSubmit}>
               <div className="mb-3 col-12 mt-3">
                 <label htmlFor="email">Correo electrónico</label>
-                <input type="email" value={email} onChange={onChangeEmail} name="email" id="email" className="form-control" placeholder="Ingrese su correo electrónico"/>
+                <input type="email" autoComplete="off" value={email} onChange={onChangeEmail} name="email" id="email" className="form-control" placeholder="Ingrese su correo electrónico"/>
                 <div className="invalid-feedback">
                   Debes ingresar un correo electrónico válido
                 </div>
               </div>
               <div className="mb-3 col-12">
                 <label htmlFor="password">Contraseña</label>
-                <input type="password" value={password} name="password" onChange={onChangePassword} id="password" className="form-control" placeholder="Ingrese su contraseña"/>
+                <input type="password" autoComplete="off" value={password} name="password" onChange={onChangePassword} id="password" className="form-control" placeholder="Ingrese su contraseña"/>
                 <div className="invalid-feedback">
                   La contraseña debe tener más de 6 dígitos
                 </div>
               </div>
               <div className="mb-3 col-12">
                 <label htmlFor="nombres">Nombres</label>
-                <input type="text" value={nombres} name="nombres" onChange={onChangeNombres} id="nombres" className="form-control" placeholder="Ingrese sus nombres"/>
+                <input type="text" autoComplete="off" value={nombres} name="nombres" onChange={onChangeNombres} id="nombres" className="form-control" placeholder="Ingrese sus nombres"/>
                 <div className="invalid-feedback">
                   debes ingresar unos nombres válidos
                 </div>
               </div>
               <div className="mb-3 col-12">
                 <label htmlFor="apellidos">Apellidos</label>
-                <input type="text" name="apellidos" value={apellidos} onChange={onChangeApellidos} id="apellidos" className="form-control" placeholder="Ingrese sus apellidos"/>
+                <input type="text" autoComplete="off" name="apellidos" value={apellidos} onChange={onChangeApellidos} id="apellidos" className="form-control" placeholder="Ingrese sus apellidos"/>
                 <div className="invalid-feedback">
                   debes ingresar unos apellidos válidos
                 </div>
               </div>
               <button type="submit" className="col-12 btn btn-dark mt-3">Registrarse</button>
-              <button type="button" className="col-12 btn btn-info mt-3">¿Ya tienes una cuenta?</button>
+              <button type="button" className="col-12 btn btn-info mt-3" onClick={() => {navigate('/login',{replace: true})}}>¿Ya tienes una cuenta?</button>
             </form>
 
             : <div className="col-12 d-flex justify-content-center mt-5">

@@ -101,20 +101,20 @@ export const Login = ({onLogin}) => {
               ? <form className="col-12" onSubmit={onSubmit}>
               <div className="mb-3 col-12 mt-3">
                 <label htmlFor="email">Correo electrónico</label>
-                <input type="email" onChange={onChangeEmail} name="email" id="email" className="form-control" placeholder="Ingrese su correo electrónico"/>
+                <input type="email" autoComplete="off" onChange={onChangeEmail} name="email" id="email" className="form-control" placeholder="Ingrese su correo electrónico"/>
                 <div className="invalid-feedback">
                   Debes ingresar un correo electrónico válido
                 </div>
               </div>
               <div className="mb-3 col-12">
                 <label htmlFor="password">Contraseña</label>
-                <input type="password" name="password" onChange={onChangePassword} id="password" className="form-control" placeholder="Ingrese su contraseña"/>
+                <input type="password" autoComplete="off" name="password" onChange={onChangePassword} id="password" className="form-control" placeholder="Ingrese su contraseña"/>
                 <div className="invalid-feedback">
                   La contraseña debe tener más de 6 dígitos
                 </div>
               </div>
               <button type="submit" className="col-12 btn btn-dark mt-3">Acceder</button>
-              <button type="button" className="col-12 btn btn-info mt-3">¿No tienes cuenta?</button>
+              <button type="button" className="col-12 btn btn-info mt-3" onClick={() => {navigate('/register',{replace: true})}}>¿No tienes cuenta?</button>
             </form>
               : 
               <div className="col-12 d-flex justify-content-center mt-5">

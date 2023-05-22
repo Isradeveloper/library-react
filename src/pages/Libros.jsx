@@ -4,10 +4,10 @@ import { useState, useRef, useEffect } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { validarVacio, validarNoNumeros } from '../utils/validadores'
 import Swal from 'sweetalert2'
-import { agregarLibro, cargarLibros } from '../firebase'
+import { agregarLibro, cargarLibros, reservarLibro } from '../firebase'
 
 
-export const Libros = ({usuario}) => {
+export const Libros = ({usuario, onLogin}) => {
   
   const [libros, setLibros] = useState([])
   const [cargandoLibros, setCargandoLibros] = useState(false)
@@ -85,8 +85,49 @@ export const Libros = ({usuario}) => {
         cancelButton: 'btn btn-danger'
       }
     })
-    console.log(respuestaSwal);
+    if (respuestaSwal.isConfirmed){
+      setCargandoLibros(true)
+      const respuesta = await reservarLibro(usuario.UID, UUID)
+
+      if (respuesta.success == true) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Genial!',
+          text: respuesta.msg,
+          confirmButtonText: 'Aceptar',
+          didRender: () => {
+            const confirmButton = Swal.getConfirmButton();
+            confirmButton.classList.remove('swal2-confirm');
+          },
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        }).then((res) => {
+          cargarDatos()
+          onLogin(respuesta.usuario)
+          
+        })
+      } else {
+        setCargandoLibros(false)
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: respuesta.msg,
+          confirmButtonText: 'Aceptar',
+          didRender: () => {
+            const confirmButton = Swal.getConfirmButton();
+            confirmButton.classList.remove('swal2-confirm');
+          },
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        })
+      }
+    }
   }
+
+    
+  
 
   const onChangePortada = (e) => {
     const file = (e.target.files[0])
@@ -330,9 +371,14 @@ export const Libros = ({usuario}) => {
         </Modal.Footer>
       </Modal>
 
-    <div className="agregar-libro" onClick={handleShow}>
-      <GrFormAdd size={30}/>
-    </div>
+    {(usuario.Admin)
+      ?
+        <div className="agregar-libro" onClick={handleShow}>
+          <GrFormAdd size={30}/>
+        </div>
+      :
+        ''
+    }
     </>
   )
 }
