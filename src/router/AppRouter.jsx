@@ -3,6 +3,7 @@ import {Navegador} from '../components/Navegador'
 import { useState, useEffect } from 'react';
 import { Login } from '../pages/Login';
 import { Register } from '../pages/Register';
+import { Libros } from '../pages/Libros'
 
 export const AppRouter = () => {
   const [usuario, setUsuario] = useState(null);
@@ -46,10 +47,10 @@ export const AppRouter = () => {
       {/* Rutas privadas */}
 
       <Route
-        path="/"
+        path="/libros"
         element={
           // Solo muestra el componente protegido si hay un usuario almacenado en el LocalStorage
-          usuario ? '' : <Navigate to="/libros" replace />
+          usuario ? <Libros/> : <Navigate to="/login" replace />
         }
       />
 

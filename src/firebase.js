@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import 'firebase/storage'
 import 'firebase/auth'
 import 'firebase/firestore'
+import {v4 as uuidv4} from 'uuid'
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDWUpuQY0T-Wj2-PY-OFlzju3WJmHnvGmk",
@@ -16,6 +17,8 @@ const firebaseConfig = {
 const fire = firebase.initializeApp(firebaseConfig);
 const auth = fire.auth()
 const database = fire.firestore()
+const storage = fire.storage()
+const ref = storage.ref()
 
 const crearNuevoUsuario = async (email, password, nombres, apellidos) => {
   try {
@@ -87,4 +90,57 @@ const loguearUsuario = async(email, password) => {
   }
 }
 
-export {fire, auth, crearNuevoUsuario, loguearUsuario}
+const agregarLibro = async (titulo, descripcion, autor, year, portada) => {
+  try {
+    var mountainsRef = ref.child(uuidv4());
+    const snapshot = await mountainsRef.put(portada)
+    // Obtener el enlace de descarga del archivo cargado
+    const url = await snapshot.ref.getDownloadURL();
+
+    await database.collection('libros').add({
+      "Titulo": titulo,
+      "Descripcion": descripcion,
+      "Autor": autor,
+      "Año": year,
+      "Disponibilidad": true,
+      "Portada": url
+    })
+    return {
+      "success": true,
+      "msg": "Libro creado correctamente"
+    }
+  } catch (error) {
+    console.error({
+      "errorCode": error.code,
+      "errorMessage": error.message
+    });
+    return {
+      "success": false,
+      "msg": error.message,
+    }
+  }
+}
+
+const cargarLibros = async() => {
+  try {
+    const query = await database.collection('libros').where('Titulo', '!=', '').get()
+    let libros = []
+    query.forEach((doc) => {
+      libros = [...libros, doc.data()]
+    })
+
+    return libros
+
+  } catch (error) {
+    console.error({
+      "errorCode": error.code,
+      "errorMessage": error.message
+    });
+    return {
+      "success": false,
+      "msg": error.message,
+    }
+  }
+}
+
+export {fire, auth, crearNuevoUsuario, loguearUsuario, agregarLibro, cargarLibros}
