@@ -23,20 +23,33 @@ const crearNuevoUsuario = async (email, password, nombres, apellidos) => {
     // Signed in
     const usuario = credencial.user;
 
-    const docRef = await database.collection(`usuarios`).add({
+    await database.collection(`usuarios`).add({
       "Email": usuario.email,
       "UID": usuario.uid,
       "Nombres": nombres,
       "Apellidos": apellidos
     })
 
-    console.log(docRef);
+    return {
+      "success": true,
+      "msg": "Usuario creado correctamente!",
+      "usuario": {
+        "Email": usuario.email,
+        "UID": usuario.uid,
+        "Nombres": nombres,
+        "Apellidos": apellidos
+      }
+    }
 
   } catch (error) {
     console.error({
       "errorCode": error.code,
       "errorMessage": error.message
     });
+    return {
+      "success": false,
+      "msg": error.message,
+    }
   }
 }
 
