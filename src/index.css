@@ -3,5 +3,5 @@ body, #root {
 }
 
 nav {
-  height: 4rem;
+  min-height: 4rem;
 }

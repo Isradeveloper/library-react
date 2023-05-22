@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { validarCorreo, validarPassword, validarNoNumeros } from "../utils/validadores"
+import {crearNuevoUsuario} from "../firebase"
 
 export const Register = () => {
 
@@ -15,31 +16,31 @@ export const Register = () => {
   const onChangeEmail = (e) => {
     const value = e.target.value
     setEmailValido(validarCorreo(e.target, value))
-    setEmail(value)
+    setEmail(value.toLowerCase())
   }
 
   const onChangePassword = (e) => {
     const value = e.target.value
     setPasswordValida(validarPassword(e.target, value))
-    setPassword(value)
+    setPassword(value.toUpperCase())
   }
 
   const onChangeNombres = (e) => {
     const value = e.target.value
     setNombresValidos(validarNoNumeros(e.target, value))
-    setNombres(value)
+    setNombres(value.toUpperCase())
   }
 
   const onChangeApellidos = (e) => {
     const value = e.target.value
     setApellidosValidos(validarNoNumeros(e.target, value))
-    setApellidos(value)
+    setApellidos(value.toUpperCase())
   }
 
   const onSubmit = (e) => {
     e.preventDefault()
     if (emailValido && passwordValida && nombresValidos && apellidosValidos) {
-      console.log('OK');
+      crearNuevoUsuario(email, password, nombres, apellidos)
     } else {
       console.log('FORM INCORRECTO');
     }

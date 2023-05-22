@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 import 'firebase/storage'
 import 'firebase/auth'
-
+import 'firebase/firestore'
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDWUpuQY0T-Wj2-PY-OFlzju3WJmHnvGmk",
@@ -14,6 +14,30 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const fire = firebase.initializeApp(firebaseConfig);
-const auth = fire.auth
+const auth = fire.auth()
+const database = fire.firestore()
 
-export {fire, auth}
+const crearNuevoUsuario = async (email, password, nombres, apellidos) => {
+  try {
+    const credencial = await auth.createUserWithEmailAndPassword(email, password)
+    // Signed in
+    const usuario = credencial.user;
+
+    const docRef = await database.collection(`usuarios`).add({
+      "Email": usuario.email,
+      "UID": usuario.uid,
+      "Nombres": nombres,
+      "Apellidos": apellidos
+    })
+
+    console.log(docRef);
+
+  } catch (error) {
+    console.error({
+      "errorCode": error.code,
+      "errorMessage": error.message
+    });
+  }
+}
+
+export {fire, auth, crearNuevoUsuario}
