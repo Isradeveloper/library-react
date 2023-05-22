@@ -9,7 +9,9 @@ export const Navegador = ({usuario, onLogOut}) => {
 
   const navegar = (ruta, replace) => {
     if (replace == true) {
-      navigate(ruta, replace)
+      navigate(ruta, {
+        replace: true
+      })
     } else {
       navigate(ruta)
     }

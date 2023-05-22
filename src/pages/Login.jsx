@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { validarCorreo, validarPassword } from "../utils/validadores"
 import {loguearUsuario} from '../firebase'
+import Swal from 'sweetalert2'
+import {useNavigate} from 'react-router-dom'
 
 export const Login = ({onLogin}) => {
 
@@ -8,6 +10,7 @@ export const Login = ({onLogin}) => {
   const [password, setPassword] = useState("")
   const [emailValido, setEmailValido] = useState(false)
   const [passwordValida, setPasswordValida] = useState(false)
+  const [cargando, setCargando] = useState(false)
 
   const onChangeEmail = (e) => {
     const value = e.target.value
@@ -21,12 +24,68 @@ export const Login = ({onLogin}) => {
     setPassword(value)
   }
 
-  const onSubmit = (e) => {
+  const navigate = useNavigate()
+
+  const onSubmit = async(e) => {
     e.preventDefault()
     if (emailValido && passwordValida) {
-      loguearUsuario(email, password)
+      setCargando(true)
+      const respuesta = await loguearUsuario(email, password)
+      setCargando(false)
+      if (respuesta.success == true) {
+
+        // GUARDA EL USUARIO EN LOCALSTORAGE
+        onLogin(respuesta.usuario)
+
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Genial',
+          text: respuesta.msg,
+          confirmButtonText: 'Aceptar',
+          timer: 1200,
+          didRender: () => {
+            const confirmButton = Swal.getConfirmButton();
+            confirmButton.classList.remove('swal2-confirm');
+          },
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+          // LUEGO DEL MENSAJE SE REDIRECCIONA
+        }).then((response) => {
+          navigate('/register', {
+            replace: true
+          })
+        })
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: respuesta.msg,
+          confirmButtonText: 'Aceptar',
+          didRender: () => {
+            const confirmButton = Swal.getConfirmButton();
+            confirmButton.classList.remove('swal2-confirm');
+          },
+          customClass: {
+            confirmButton: 'btn btn-primary'
+          }
+        })
+      }
     } else {
-      console.log('FORM INCORRECTO');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'El formulario tiene algunos errores',
+        confirmButtonText: 'Aceptar',
+        didRender: () => {
+          const confirmButton = Swal.getConfirmButton();
+          confirmButton.classList.remove('swal2-confirm');
+        },
+        customClass: {
+          confirmButton: 'btn btn-primary'
+        }
+      })
     }
   }
 
@@ -38,7 +97,8 @@ export const Login = ({onLogin}) => {
             <div className="col-12">
               <h1 className="text-center">Iniciar sesión</h1>
             </div>
-            <form className="col-12" onSubmit={onSubmit}>
+            {(cargando == false)
+              ? <form className="col-12" onSubmit={onSubmit}>
               <div className="mb-3 col-12 mt-3">
                 <label htmlFor="email">Correo electrónico</label>
                 <input type="email" onChange={onChangeEmail} name="email" id="email" className="form-control" placeholder="Ingrese su correo electrónico"/>
@@ -56,6 +116,13 @@ export const Login = ({onLogin}) => {
               <button type="submit" className="col-12 btn btn-dark mt-3">Acceder</button>
               <button type="button" className="col-12 btn btn-info mt-3">¿No tienes cuenta?</button>
             </form>
+              : 
+              <div className="col-12 d-flex justify-content-center mt-5">
+                <div className="spinner-border text-info" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            }
           </div>
         </div>
       </div>

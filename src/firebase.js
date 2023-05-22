@@ -38,7 +38,8 @@ const crearNuevoUsuario = async (email, password, nombres, apellidos) => {
         "Email": usuario.email,
         "UID": usuario.uid,
         "Nombres": nombres,
-        "Apellidos": apellidos
+        "Apellidos": apellidos,
+        "LibrosPrestados": []
       }
     }
 
@@ -70,7 +71,7 @@ const loguearUsuario = async(email, password) => {
 
     return {
       "success": true,
-      "msg": `Bienvenidx ${data.Nombres} ${data.apellidos}`,
+      "msg": `BIENVENIDX ${data.Nombres} ${data.Apellidos}`,
       "usuario": data
     }
 

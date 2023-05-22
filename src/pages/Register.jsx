@@ -58,6 +58,7 @@ export const Register = ({onLogin}) => {
           title: 'Genial',
           text: 'Usuario registrado correctamente!',
           confirmButtonText: 'Aceptar',
+          timer: 1200,
           didRender: () => {
             const confirmButton = Swal.getConfirmButton();
             confirmButton.classList.remove('swal2-confirm');
