@@ -92,7 +92,8 @@ const loguearUsuario = async(email, password) => {
 
 const agregarLibro = async (titulo, descripcion, autor, year, portada) => {
   try {
-    var mountainsRef = ref.child(uuidv4());
+    const UUID = uuidv4()
+    var mountainsRef = ref.child(UUID);
     const snapshot = await mountainsRef.put(portada)
     // Obtener el enlace de descarga del archivo cargado
     const url = await snapshot.ref.getDownloadURL();
@@ -103,7 +104,8 @@ const agregarLibro = async (titulo, descripcion, autor, year, portada) => {
       "Autor": autor,
       "Año": year,
       "Disponibilidad": true,
-      "Portada": url
+      "Portada": url,
+      "UUID": UUID
     })
     return {
       "success": true,

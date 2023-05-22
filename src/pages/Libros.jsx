@@ -41,6 +41,7 @@ export const Libros = ({usuario}) => {
   const [year, setYear] = useState("")
   const [yearValido, setYearValido] = useState(false)
   const [portada, setPortada] = useState(null)
+  const [subiendo, setSubiendo] = useState(false)
 
   const onChangeTitulo = (e) => {
     const value = e.target.value
@@ -123,7 +124,9 @@ export const Libros = ({usuario}) => {
   const onSubmit = async(e) => {
     e.preventDefault()
     if (tituloValido && descripcionValida && autorValido && yearValido && portada) {
+      setSubiendo(true)
       const respuesta = await agregarLibro(titulo, descripción, autor, year, portada)
+      setSubiendo(false)
 
       if (respuesta.success == true) {
         Swal.fire({
@@ -180,28 +183,28 @@ export const Libros = ({usuario}) => {
     <h2 className="text-center">Libros disponibles</h2>
       {(cargandoLibros == false)
         ?
-        <div className="col-12 bg-danger mt-3 d-flex flex-wrap gap-2 px-2 justify-content-center">
+        <div className="col-12 mt-3 d-flex flex-wrap gap-2 px-2 justify-content-center">
 
         {libros.map((libro, index) => {
           return (
-            <div className="col-12 col-md-4 col-lg-3 col-xxl-2" key={index}>
-            <div className="card w-100">
-                <img src={libro.Portada} className="card-img-top" alt="Portada" />
+            <div className="col-12 col-md-4 col-lg-3 col-xxl-2 my-2" key={index}>
+              <div className="card w-100">
+                <img src={libro.Portada} className="card-img-top" alt="Portada" style={{ height: "200px", objectFit: "cover" }} />
                 <div className="card-body">
-                    <h5 className="card-title">{libro.Titulo}</h5>
-                    <p className="card-text">{libro.Descripcion}</p>
+                  <h5 className="card-title">{libro.Titulo}</h5>
+                  <p className="card-text" style={{ maxHeight: "100px", overflow: "hidden", textOverflow: "ellipsis" }}>{libro.Descripcion}</p>
                 </div>
                 <ul className="list-group list-group-flush">
-                    <li className="list-group-item"><b>Autor: </b>{libro.Autor}</li>
-                    <li className="list-group-item"><b>Año: </b>{libro.Año}</li>
-                    <li className="list-group-item"><b>Disponible: </b>{(libro.Disponibilidad) ? 'SI' : 'NO'}</li>
+                  <li className="list-group-item"><b>Autor: </b>{libro.Autor}</li>
+                  <li className="list-group-item"><b>Año: </b>{libro.Año}</li>
+                  <li className="list-group-item"><b>Disponible: </b>{(libro.Disponibilidad) ? 'SI' : 'NO'}</li>
                 </ul>
                 <div className="card-body">
-                    <a href="#" className="card-link">Card link</a>
-                    <a href="#" className="card-link">Another link</a>
+                  <a href="#" className="card-link">Card link</a>
+                  <a href="#" className="card-link">Another link</a>
                 </div>
+              </div>
             </div>
-        </div>
           )
         })}
 
@@ -221,7 +224,8 @@ export const Libros = ({usuario}) => {
           <Modal.Title>Agregar libro</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <form onSubmit={onSubmit}>
+          {(subiendo == false)
+            ? <form onSubmit={onSubmit}>
             <div className="mb-3 col-12 mt-3">
               <label htmlFor="titulo">Título</label>
               <input type="text" onChange={onChangeTitulo} name="titulo" id="titulo" className="form-control" placeholder="Ingrese el título del libro"/>
@@ -256,22 +260,41 @@ export const Libros = ({usuario}) => {
             
             <div className="mb-3 col-12 mt-3">
               <label htmlFor="titulo">Portada del libro</label>
-              <input type="file" name="portada" id="portada" onChange={onChangePortada}/>
+              <input type="file" className='form-control' name="portada" id="portada" onChange={onChangePortada}/>
             </div>
 
             <button type="submit" className='d-none' ref={ref}></button>
 
           </form>
+            :
+            <>
+              <div className="col-12 d-flex justify-content-center my-5">
+                <div className="spinner-border text-info" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              </div>
+              </>
+          }
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancelar
-          </Button>
-          <Button variant="primary" onClick={(e) => {
-            ref.current.click()
-          }}>
-            Guardar
-          </Button>
+          <>
+            {(subiendo == false)
+              ?
+                <>
+                  <Button variant="secondary" onClick={handleClose}>
+                    Cancelar
+                  </Button>
+                  <Button variant="primary" onClick={(e) => {
+                    ref.current.click()
+                  }}>
+                    Guardar
+                  </Button>
+                </>
+              :
+              ''
+              
+            }
+          </>
         </Modal.Footer>
       </Modal>
 
