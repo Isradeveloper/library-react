@@ -26,7 +26,7 @@ export const Register = ({onLogin}) => {
   const onChangePassword = (e) => {
     const value = e.target.value
     setPasswordValida(validarPassword(e.target, value))
-    setPassword(value.toUpperCase())
+    setPassword(value)
   }
 
   const onChangeNombres = (e) => {

@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { validarCorreo, validarPassword } from "../utils/validadores"
+import {loguearUsuario} from '../firebase'
 
 export const Login = ({onLogin}) => {
 
@@ -23,10 +24,7 @@ export const Login = ({onLogin}) => {
   const onSubmit = (e) => {
     e.preventDefault()
     if (emailValido && passwordValida) {
-      onLogin({
-        "email": email,
-        "state": true
-      })
+      loguearUsuario(email, password)
     } else {
       console.log('FORM INCORRECTO');
     }

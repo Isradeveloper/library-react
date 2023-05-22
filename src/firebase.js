@@ -27,7 +27,8 @@ const crearNuevoUsuario = async (email, password, nombres, apellidos) => {
       "Email": usuario.email,
       "UID": usuario.uid,
       "Nombres": nombres,
-      "Apellidos": apellidos
+      "Apellidos": apellidos,
+      "LibrosPrestados": []
     })
 
     return {
@@ -53,4 +54,36 @@ const crearNuevoUsuario = async (email, password, nombres, apellidos) => {
   }
 }
 
-export {fire, auth, crearNuevoUsuario}
+const loguearUsuario = async(email, password) => {
+  try {
+    const credencial = await auth.signInWithEmailAndPassword(email, password)
+
+    const usuario = credencial.user
+
+    const query = await database.collection('usuarios').where('UID', '==', usuario.uid).get()
+
+    let data
+
+    query.forEach((doc)=> {
+      data = doc.data()
+    })
+
+    return {
+      "success": true,
+      "msg": `Bienvenidx ${data.Nombres} ${data.apellidos}`,
+      "usuario": data
+    }
+
+  } catch (error) {
+    console.error({
+      "errorCode": error.code,
+      "errorMessage": error.message
+    });
+    return {
+      "success": false,
+      "msg": error.message,
+    }
+  }
+}
+
+export {fire, auth, crearNuevoUsuario, loguearUsuario}
