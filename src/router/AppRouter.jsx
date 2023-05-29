@@ -5,6 +5,7 @@ import { Login } from '../pages/Login';
 import { Register } from '../pages/Register';
 import { Libros } from '../pages/Libros'
 import { Prestamos } from '../pages/Prestamos'
+import { Admin } from '../pages/Admin'
 
 
 export const AppRouter = () => {
@@ -61,6 +62,14 @@ export const AppRouter = () => {
         element={
           // Solo muestra el componente protegido si hay un usuario almacenado en el LocalStorage
           usuario ? <Prestamos usuario={usuario} onLogin={handleLogin}/> : <Navigate to="/login" replace />
+        }
+      />
+
+<Route
+        path="/administrador"
+        element={
+          // Solo muestra el componente protegido si hay un usuario almacenado en el LocalStorage
+          usuario ? <Admin usuario={usuario} onLogin={handleLogin}/> : <Navigate to="/login" replace />
         }
       />
 

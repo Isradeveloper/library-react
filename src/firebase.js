@@ -258,4 +258,73 @@ const devolverLibro = async(usuarioUID, libroUUID) => {
   }
 }
 
-export {fire, auth, crearNuevoUsuario, loguearUsuario, agregarLibro, cargarLibros, reservarLibro, cargarPrestamos, devolverLibro}
+const actualizarLibro = async (UUID,titulo, descripcion, autor, year, portada) => {
+  try {
+
+    if(portada != null){
+      var mountainsRef = ref.child(UUID);
+      const snapshot = await mountainsRef.put(portada)
+      // Obtener el enlace de descarga del archivo cargado
+      const url = await snapshot.ref.getDownloadURL();
+
+      await database.collection('libros').doc(UUID).update({
+        "Titulo": titulo,
+        "Descripcion": descripcion,
+        "Autor": autor,
+        "Año": year,
+        "Disponibilidad": true,
+        "Portada": url,
+      })
+    }else{
+        await database.collection('libros').doc(UUID).update({
+          "Titulo": titulo,
+          "Descripcion": descripcion,
+          "Autor": autor,
+          "Año": year,
+          "Disponibilidad": true
+        })
+    }
+
+    
+
+
+    return {
+      "success": true,
+      "msg": "Libro actualizado correctamente"
+    }
+  } catch (error) {
+    console.error({
+      "errorCode": error.code,
+      "errorMessage": error.message
+    });
+    return {
+      "success": false,
+      "msg": error.message,
+    }
+  }
+}
+
+const eliminarLibro = async (UUID) => {
+  try {
+    const refImg = ref.child(UUID);
+    await refImg.delete()
+
+    await database.collection('libros').doc(UUID).delete();
+
+    return {
+      "success": true,
+      "msg": "Libro eliminado correctamente"
+    }
+  } catch (error) {
+    console.error({
+      "errorCode": error.code,
+      "errorMessage": error.message
+    });
+    return {
+      "success": false,
+      "msg": error.message,
+    }
+  }
+}
+
+export {fire, auth, crearNuevoUsuario, loguearUsuario, agregarLibro, cargarLibros, reservarLibro, cargarPrestamos, devolverLibro, actualizarLibro, eliminarLibro}

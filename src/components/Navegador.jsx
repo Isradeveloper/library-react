@@ -26,6 +26,7 @@ export const Navegador = ({usuario, onLogOut}) => {
           <Nav className="me-auto">
           {(!usuario) ? '' : <Nav.Link eventKey={1} onClick={(e) => {navegar('/libros', false)}}>Libros disponibles</Nav.Link>}
           {(!usuario) ? '' : <Nav.Link eventKey={2} onClick={(e) => {navegar('/prestamos', false)}}>Mis prestamos</Nav.Link>}
+          {(!usuario) ? '' && (usuario.Admin) : <Nav.Link eventKey={5} onClick={(e) => {navegar('/administrador', false)}}>Panel Administrador</Nav.Link>}
           </Nav>
           
           <Nav>
