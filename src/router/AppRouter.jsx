@@ -33,7 +33,7 @@ export const AppRouter = () => {
 
   return (
     <>
-    <Navegador usuario={usuario} onLogOut={handleLogout}/>
+    <Navegador usuario={usuario} onLogOut={handleLogout} isAdmin={usuario?.admin ?? false} />
     <Routes>
       {/* Rutas públicas */}
       <Route
@@ -69,7 +69,7 @@ export const AppRouter = () => {
         path="/administrador"
         element={
           // Solo muestra el componente protegido si hay un usuario almacenado en el LocalStorage
-          usuario ? <Admin usuario={usuario} onLogin={handleLogin}/> : <Navigate to="/login" replace />
+          usuario ? <Admin usuario={usuario} onLogin={handleLogin}  isAdmin={usuario?.admin ?? false}/> : <Navigate to="/login" replace />
         }
       />
 

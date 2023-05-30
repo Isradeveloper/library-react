@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useNavigate } from 'react-router-dom';
 
-export const Navegador = ({usuario, onLogOut}) => {
+export const Navegador = ({usuario, onLogOut, isAdmin}) => {
 
   const navigate = useNavigate()
 
@@ -26,7 +26,7 @@ export const Navegador = ({usuario, onLogOut}) => {
           <Nav className="me-auto">
           {(!usuario) ? '' : <Nav.Link eventKey={1} onClick={(e) => {navegar('/libros', false)}}>Libros disponibles</Nav.Link>}
           {(!usuario) ? '' : <Nav.Link eventKey={2} onClick={(e) => {navegar('/prestamos', false)}}>Mis prestamos</Nav.Link>}
-          {(!usuario) ? '' && (usuario.Admin) : <Nav.Link eventKey={5} onClick={(e) => {navegar('/administrador', false)}}>Panel Administrador</Nav.Link>}
+          {(isAdmin == true) ? <Nav.Link eventKey={5} onClick={(e) => {navegar('/administrador', false)}}>Panel Administrador</Nav.Link> : ''}
           </Nav>
           
           <Nav>

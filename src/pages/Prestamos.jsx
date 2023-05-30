@@ -94,12 +94,12 @@ export const Prestamos = ({usuario, onLogin}) => {
               <div className="card w-100">
                 <img src={libro.Portada} className="card-img-top" alt="Portada" style={{ height: "200px", objectFit: "cover" }} />
                 <div className="card-body">
-                  <h5 className="card-title">{libro.Titulo}</h5>
-                  <p className="card-text" style={{ maxHeight: "100px", overflow: "hidden", textOverflow: "ellipsis" }}>{libro.Descripcion}</p>
+                  <h5 className="card-title" style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace: 'nowrap'}}>{libro.Titulo}</h5>
+                  <p className="card-text" style={{ maxHeight: "100px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: 'nowrap' }}>{libro.Descripcion}</p>
                 </div>
                 <ul className="list-group list-group-flush">
-                  <li className="list-group-item"><b>Autor: </b>{libro.Autor}</li>
-                  <li className="list-group-item"><b>Año: </b>{libro.Año}</li>
+                  <li className="list-group-item" style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace: 'nowrap'}}><b>Autor: </b>{libro.Autor}</li>
+                  <li className="list-group-item" style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace: 'nowrap'}}><b>Año: </b>{libro.Año}</li>
                 </ul>
                 {(libro.Disponibilidad == false)
                   ?

@@ -11,7 +11,7 @@ import {
   eliminarLibro,
 } from "../firebase";
 
-export const Admin = ({ usuario, onLogin }) => {
+export const Admin = ({ usuario, onLogin, isAdmin}) => {
   const ref = useRef();
   const [show, setShow] = useState(false);
 
@@ -544,7 +544,7 @@ export const Admin = ({ usuario, onLogin }) => {
           </Modal.Footer>
         </Modal>
 
-        {usuario.Admin ? (
+        {isAdmin ? (
           <div className="agregar-libro" onClick={handleShow}>
             <GrFormAdd size={30} />
           </div>
